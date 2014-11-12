@@ -9,35 +9,26 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import skimage
-from skimage import  data, novice, io, img_as_float
+import Image
+from skimage import  data
 from skimage.filter import threshold_adaptive
 from skimage.viewer import ImageViewer
 import skimage.transform
 
-img = img_as_float(io.imread("testdoc.png"))
-#img = np.fix(img) #rounds values to nearest int
+img = np.array(Image.open("testdoc.png"))
 
 lx, ly = img.shape
-xRES = int(lx/20) 
-print(xRES)
-yRES = int(ly/20)
-print(yRES)
 
-lowres = skimage.transform.resize(img, (xRES, yRES))
-
-blackT = 40
+lowres = skimage.transform.resize(img, (int(lx/20), int(ly/20)))
 
 img2 = np.copy(img)
 img2[:lx/2, :] = 0
 
-#for i in xrange(lx):
-#	for j in xrange(ly):
-#		val = np.rint(img[i, j])
-i = 0
-j = 0
-for (i,j), value in np.ndenumerate(img):
-	#print(i, j, img[i,j])
+for (i,j), value in np.ndenumerate(lowres):
+	if value > 0.001:
+		print(i, j, value)
 	pass
+
 
 
 #DISPLAY STUFF
