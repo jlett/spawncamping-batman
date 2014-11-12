@@ -15,7 +15,7 @@ from skimage.filter import threshold_adaptive
 from skimage.viewer import ImageViewer
 import skimage.transform
 
-img = np.array(Image.open("testdoc.png"))
+img = np.array(Image.open("testdoc.png").convert('L'))
 
 lx, ly = img.shape
 
@@ -24,12 +24,19 @@ lowres = skimage.transform.resize(img, (int(lx/20), int(ly/20)))
 img2 = np.copy(img)
 img2[:lx/2, :] = 0
 
+minx, miny, maxx, maxy = (99999, 99999, 0, 0)
 for (i,j), value in np.ndenumerate(lowres):
-	if value > 0.001:
-		print(i, j, value)
-	pass
+	if value < 1.0:
+		if i < minx:
+			minx = i
+		if j < miny:
+			miny = j
+		if i > maxx:
+			maxx = i
+		if j > maxy:
+			maxy = j		
 
-
+print(minx, miny, maxx, maxy)
 
 #DISPLAY STUFF
 fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(8, 5))
