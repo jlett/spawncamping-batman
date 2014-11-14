@@ -19,10 +19,8 @@ img = np.array(Image.open("testdoc.png").convert('L'))
 
 lx, ly = img.shape
 
-lowres = skimage.transform.resize(img, (int(lx/20), int(ly/20)))
-
-img2 = np.copy(img)
-img2[:lx/2, :] = 0
+reducedRes = 10 #reduce resolution by factor of N
+lowres = skimage.transform.resize(img, (int(lx/reducedRes), int(ly/reducedRes)))
 
 minx, miny, maxx, maxy = (99999, 99999, 0, 0)
 for (i,j), value in np.ndenumerate(lowres):
@@ -36,7 +34,7 @@ for (i,j), value in np.ndenumerate(lowres):
 		if j > maxy:
 			maxy = j		
 
-print(minx, miny, maxx, maxy)
+cropped = img[minx*reducedRes:maxx*reducedRes, miny*reducedRes:maxy*reducedRes]
 
 #DISPLAY STUFF
 fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(8, 5))
@@ -48,7 +46,7 @@ ax[0].set_title("original")
 ax[1].imshow(lowres)
 ax[1].set_title("reduced resolution")
 
-ax[2].imshow(img2)
-ax[2].set_title("testimg")
+ax[2].imshow(cropped)
+ax[2].set_title("cropped")
 
 plt.show()
